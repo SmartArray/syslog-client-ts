@@ -1,3 +1,5 @@
+/* eslint-disable jest/no-done-callback */
+
 /**
  * Unit tests for the action's entrypoint, src/index.ts
  */
@@ -28,21 +30,26 @@ const TCP_PORT = 41235;
 
 describe('SyslogClient', () => {
   it('should allow construction of the SyslogClient class', () => {
-    const client = new SyslogClient({
-      hostname: 'localhost',
-      port: 514, 
-      transport: 'udp',
-    }, DEFAULT_IDENTITY);
+    const client = new SyslogClient(
+      {
+        hostname: 'localhost',
+        port: 514,
+        transport: 'udp',
+      },
+      DEFAULT_IDENTITY,
+    );
+
+    expect(typeof client === 'object').toBe(true);
   });
 
   describe('UDP Connection', () => {
     let server: dgram.Socket;
-    let port = UDP_PORT;
+    const port = UDP_PORT;
 
-    beforeAll((done) => {
+    beforeAll(done => {
       server = dgram.createSocket('udp4');
 
-      server.on('error', (err) => {
+      server.on('error', err => {
         debug(`Server error:\n${err.stack}`);
         server.close();
       });
@@ -54,22 +61,27 @@ describe('SyslogClient', () => {
       });
 
       server.bind(port);
-    });      
+    });
 
-    afterAll((done) => {
+    afterAll(done => {
       server.close();
       done();
-    });    
+    });
 
-    it('should allow udp message transmission', (done) => {
-      const client = new SyslogClient({
-        hostname: '127.0.0.1',
-        port: UDP_PORT, 
-        transport: 'udp',
-      }, DEFAULT_IDENTITY);
+    it('should allow udp message transmission', done => {
+      const client = new SyslogClient(
+        {
+          hostname: '127.0.0.1',
+          port: UDP_PORT,
+          transport: 'udp',
+        },
+        DEFAULT_IDENTITY,
+      );
 
       server.once('message', (msg, rinfo) => {
-        debug(`Server got: ${msg} from ${rinfo.address}:${rinfo.port}`);
+        debug(
+          `Server got: ${msg.toString()} from ${rinfo.address}:${rinfo.port}`,
+        );
 
         expect(msg.toString()).toContain('Hello UDP');
 
@@ -78,27 +90,32 @@ describe('SyslogClient', () => {
         done();
       });
 
-      client.connect().then(async () => {
-        await client.log('Hello UDP');
-      });
+      client
+        .connect()
+        .then(async () => {
+          await client.log('Hello UDP');
+        })
+        .catch(e => {
+          console.error(e);
+        });
     });
   });
 
   describe('TCP Connection', () => {
     let server: net.Server;
-    let port = TCP_PORT;
+    const port = TCP_PORT;
 
-    let bridge = new EventEmitter();
+    const bridge = new EventEmitter();
 
-    beforeAll((done) => {
+    beforeAll(done => {
       server = net.createServer(socket => {
-        socket.on('data', (data) => {
+        socket.on('data', data => {
           debug('Data received from client:', data.toString());
           bridge.emit('message', data.toString(), socket);
-        }); 
+        });
       });
 
-      server.on('error', (err) => {
+      server.on('error', err => {
         debug(`Server error:\n${err.stack}`);
         server.close();
       });
@@ -107,21 +124,24 @@ describe('SyslogClient', () => {
         debug(`Server listening on port ${port}`);
         done();
       });
-    });      
+    });
 
-    afterAll((done) => {
+    afterAll(done => {
       server.close();
       done();
-    });    
+    });
 
-    it('should allow tcp message transmission', (done) => {
-      const client = new SyslogClient({
-        hostname: '127.0.0.1',
-        port: TCP_PORT, 
-        transport: 'tcp',
-      }, DEFAULT_IDENTITY);
+    it('should allow tcp message transmission', done => {
+      const client = new SyslogClient(
+        {
+          hostname: '127.0.0.1',
+          port: TCP_PORT,
+          transport: 'tcp',
+        },
+        DEFAULT_IDENTITY,
+      );
 
-      bridge.once('message', (msg, rinfo) => {
+      bridge.once('message', (msg: string, rinfo: net.AddressInfo) => {
         debug(`Server got: ${msg} from ${rinfo.address}:${rinfo.port}`);
 
         expect(msg.toString()).toContain('Hello TCP');
@@ -131,9 +151,14 @@ describe('SyslogClient', () => {
         done();
       });
 
-      client.connect().then(async () => {
-        await client.log('Hello TCP');
-      });
+      client
+        .connect()
+        .then(async () => {
+          await client.log('Hello TCP');
+        })
+        .catch(e => {
+          console.error(e);
+        });
     });
-  });  
+  });
 });

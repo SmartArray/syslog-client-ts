@@ -10,25 +10,32 @@ import {
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as assert from 'node:assert';
-import { exec } from 'node:child_process';
 
 jest.setTimeout(10000); // Extend timeout for container startup
 
 const logFilePath = path.join(__dirname, 'logs', 'syslog_test.log');
 
-const createIdentity = (overrideOptions?: object) => Object.assign({
-  facility: Facility.LOCAL0,
-  severity: Severity.INFORMATIONAL,
-  appName: 'TestApp',
-  syslogHostname: 'test-host',
-} as IIdentity, overrideOptions);
+const createIdentity = (overrideOptions?: object): IIdentity =>
+  Object.assign(
+    {
+      facility: Facility.LOCAL0,
+      severity: Severity.INFORMATIONAL,
+      appName: 'TestApp',
+      syslogHostname: 'test-host',
+    },
+    overrideOptions,
+  );
 
 // Caller need to make sure every message is unique or delete the logfilea fter each test
-async function logAndCheck(client: SyslogClient, message: string, identity?: Partial<IIdentity>): Promise<string> {
+async function logAndCheck(
+  client: SyslogClient,
+  message: string,
+  identity?: Partial<IIdentity>,
+): Promise<string> {
   await client.log(message, identity);
 
   // Wait for rsyslog to process the message
-  await new Promise<void>((resolve) => setTimeout(resolve, 500));
+  await new Promise<void>(resolve => setTimeout(resolve, 500));
 
   // Read the log file
   const logs = fs.readFileSync(logFilePath, 'utf8');
@@ -46,7 +53,7 @@ async function logAndCheck(client: SyslogClient, message: string, identity?: Par
       if (!line.includes(identity.syslogHostname)) return false;
     }
 
-    return true;    
+    return true;
   }
 
   const line = lines.find(l => check(l));
@@ -62,55 +69,72 @@ describe('SyslogClient Integration Test', () => {
   beforeAll(() => {
     try {
       fs.unlinkSync(logFilePath);
-    } catch {}
+    } catch (e) {
+      void e;
+    }
   });
 
-  for (let leTransport of ['tcp', 'udp']) {
+  for (const leTransport of ['tcp', 'udp']) {
     const transport = leTransport as 'udp' | 'tcp';
 
     it(`should send and receive a syslog message using transport '${transport}'`, async () => {
       const identity: IIdentity = createIdentity();
 
-      const client = new SyslogClient({
-        hostname: 'localhost',
-        port: 514, 
-        transport: transport,
-      }, identity);
+      const client = new SyslogClient(
+        {
+          hostname: 'localhost',
+          port: 514,
+          transport: transport,
+        },
+        identity,
+      );
+
+      let message: string | undefined = undefined;
 
       try {
         await client.connect();
-        await logAndCheck(client, `Test message using transport '${transport}'`);
-
+        message = await logAndCheck(
+          client,
+          `Test message using transport '${transport}'`,
+        );
       } finally {
         client.disconnect();
       }
-    });
 
+      expect(typeof message === 'string').toBe(true);
+    });
 
     it(`should send and receive a syslog message using transport '${transport}' and a custom identity`, async () => {
       const identity: IIdentity = createIdentity();
 
-      const client = new SyslogClient({
-        hostname: 'localhost',
-        port: 514, 
-        transport: transport,
-      }, identity);
+      const client = new SyslogClient(
+        {
+          hostname: 'localhost',
+          port: 514,
+          transport: transport,
+        },
+        identity,
+      );
+
+      let message: string | undefined = undefined;
 
       try {
         await client.connect();
-        const message = await logAndCheck(client, `A test message with custom identity using transport '${transport}'`, {
-          facility: Facility.AUDIT,
-          severity: Severity.EMERGENCY,         
-          appName: 'secret-identity',
-          syslogHostname: 'secret-host',
-          pid: 1337
-        });
-
-        assert.ok(message.includes(' 1337 '), 'PID was not set');
-
+        message = await logAndCheck(
+          client,
+          `A test message with custom identity using transport '${transport}'`,
+          {
+            facility: Facility.AUDIT,
+            severity: Severity.EMERGENCY,
+            appName: 'secret-identity',
+            syslogHostname: 'secret-host',
+            pid: 1337,
+          },
+        );
       } finally {
         client.disconnect();
       }
-    });    
+      expect(message).toContain(' 1337 ');
+    });
   }
 });

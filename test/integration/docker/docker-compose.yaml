@@ -3,7 +3,7 @@ services:
     build: .
     container_name: rsyslog_test
     ports:
-      - "514:514"
-      - "514:514/udp"
+      - '514:514'
+      - '514:514/udp'
     volumes:
       - ../logs:/var/log

@@ -1,27 +1,32 @@
 {
-  "name": "typescript-action",
-  "description": "GitHub Actions TypeScript template",
-  "version": "0.0.0",
-  "author": "",
+  "name": "syslog-client-ts",
+  "description": "Modern typescript implementation of Syslog Client",
+  "version": "0.1.0",
+  "author": "Yoshi Jäger (github@jaeger.berlin)",
   "private": true,
-  "homepage": "https://github.com/actions/typescript-action",
+  "homepage": "https://github.com/SmartArray/syslog-client-ts",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions/typescript-action.git"
+    "url": "git+https://github.com/SmartArray/syslog-client-ts.git"
   },
   "bugs": {
-    "url": "https://github.com/actions/typescript-action/issues"
+    "url": "https://github.com/SmartArray/syslog-client-ts/issues"
   },
   "keywords": [
     "actions",
     "node",
-    "setup"
+    "setup",
+    "syslog",
+    "typescript",
+    "syslog-client"
+    "udp",
+    "tcp"
   ],
   "exports": {
     ".": "./dist/index.js"
   },
   "engines": {
-    "node": ">=21"
+    "node": ">=20"
   },
   "scripts": {
     "bundle": "npm run format:write && npm run package",
@@ -67,7 +72,6 @@
     ]
   },
   "dependencies": {
-    "@actions/core": "^1.11.1"
   },
   "devDependencies": {
     "@github/local-action": "^2.1.3",

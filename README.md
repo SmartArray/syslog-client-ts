@@ -1,263 +1,333 @@
-# Create a GitHub Action Using TypeScript
+# SyslogClient for Node.js
 
-[![GitHub Super-Linter](https://github.com/actions/typescript-action/actions/workflows/linter.yml/badge.svg)](https://github.com/super-linter/super-linter)
-![CI](https://github.com/actions/typescript-action/actions/workflows/ci.yml/badge.svg)
-[![Check dist/](https://github.com/actions/typescript-action/actions/workflows/check-dist.yml/badge.svg)](https://github.com/actions/typescript-action/actions/workflows/check-dist.yml)
-[![CodeQL](https://github.com/actions/typescript-action/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/actions/typescript-action/actions/workflows/codeql-analysis.yml)
-[![Coverage](./badges/coverage.svg)](./badges/coverage.svg)
+A TypeScript implementation of a syslog client for Node.js that sends RFC 5424
+formatted messages over TCP or UDP to a syslog server.
 
-Use this template to bootstrap the creation of a TypeScript action. :rocket:
+## Features
 
-This template includes compilation support, tests, a validation workflow,
-publishing, and versioning guidance.
+- **Supports TCP and UDP**: Choose between TCP or UDP transport protocols.
+- **RFC 5424 Compliance**: Sends properly formatted syslog messages.
+- **Customizable Identity**: Override default options with custom identity
+  settings.
+- **EventEmitter Integration**: Emits `connect`, `disconnect`, and `error`
+  events.
+- **Reconnection Logic**: Automatic reconnection support for TCP connections.
+- **TypeScript Support**: Fully typed for better development experience.
 
-If you are new, there's also a simpler introduction in the
-[Hello world JavaScript action repository](https://github.com/actions/hello-world-javascript-action).
+## Installation
 
-## Create Your Own Action
+Install the package using npm:
 
-To create your own action, you can use this repository as a template! Just
-follow the below instructions:
-
-1. Click the **Use this template** button at the top of the repository
-1. Select **Create a new repository**
-1. Select an owner and name for your new repository
-1. Click **Create repository**
-1. Clone your new repository
-
-> [!IMPORTANT]
->
-> Make sure to remove or update the [`CODEOWNERS`](./CODEOWNERS) file! For
-> details on how to use this file, see
-> [About code owners](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners).
-
-## Initial Setup
-
-After you've cloned the repository to your local machine or codespace, you'll
-need to perform some initial setup steps before you can develop your action.
-
-> [!NOTE]
->
-> You'll need to have a reasonably modern version of
-> [Node.js](https://nodejs.org) handy (20.x or later should work!). If you are
-> using a version manager like [`nodenv`](https://github.com/nodenv/nodenv) or
-> [`nvm`](https://github.com/nvm-sh/nvm), this template has a `.node-version`
-> file at the root of the repository that will be used to automatically switch
-> to the correct version when you `cd` into the repository. Additionally, this
-> `.node-version` file is used by GitHub Actions in any `actions/setup-node`
-> actions.
-
-1. :hammer_and_wrench: Install the dependencies
-
-   ```bash
-   npm install
-   ```
-
-1. :building_construction: Package the TypeScript for distribution
-
-   ```bash
-   npm run bundle
-   ```
-
-1. :white_check_mark: Run the tests
-
-   ```bash
-   $ npm test
-
-   PASS  ./index.test.js
-     ✓ throws invalid number (3ms)
-     ✓ wait 500 ms (504ms)
-     ✓ test runs (95ms)
-
-   ...
-   ```
-
-## Update the Action Metadata
-
-The [`action.yml`](action.yml) file defines metadata about your action, such as
-input(s) and output(s). For details about this file, see
-[Metadata syntax for GitHub Actions](https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions).
-
-When you copy this repository, update `action.yml` with the name, description,
-inputs, and outputs for your action.
-
-## Update the Action Code
-
-The [`src/`](./src/) directory is the heart of your action! This contains the
-source code that will be run when your action is invoked. You can replace the
-contents of this directory with your own code.
-
-There are a few things to keep in mind when writing your action code:
-
-- Most GitHub Actions toolkit and CI/CD operations are processed asynchronously.
-  In `main.ts`, you will see that the action is run in an `async` function.
-
-  ```javascript
-  import * as core from '@actions/core'
-  //...
-
-  async function run() {
-    try {
-      //...
-    } catch (error) {
-      core.setFailed(error.message)
-    }
-  }
-  ```
-
-  For more information about the GitHub Actions toolkit, see the
-  [documentation](https://github.com/actions/toolkit/blob/master/README.md).
-
-So, what are you waiting for? Go ahead and start customizing your action!
-
-1. Create a new branch
-
-   ```bash
-   git checkout -b releases/v1
-   ```
-
-1. Replace the contents of `src/` with your action code
-1. Add tests to `__tests__/` for your source code
-1. Format, test, and build the action
-
-   ```bash
-   npm run all
-   ```
-
-   > This step is important! It will run [`ncc`](https://github.com/vercel/ncc)
-   > to build the final JavaScript action code with all dependencies included.
-   > If you do not run this step, your action will not work correctly when it is
-   > used in a workflow. This step also includes the `--license` option for
-   > `ncc`, which will create a license file for all of the production node
-   > modules used in your project.
-
-1. (Optional) Test your action locally
-
-   The [`@github/local-action`](https://github.com/github/local-action) utility
-   can be used to test your action locally. It is a simple command-line tool
-   that "stubs" (or simulates) the GitHub Actions Toolkit. This way, you can run
-   your TypeScript action locally without having to commit and push your changes
-   to a repository.
-
-   The `local-action` utility can be run in the following ways:
-
-   - Visual Studio Code Debugger
-
-     Make sure to review and, if needed, update
-     [`.vscode/launch.json`](./.vscode/launch.json)
-
-   - Terminal/Command Prompt
-
-     ```bash
-     # npx local action <action-yaml-path> <entrypoint> <dotenv-file>
-     npx local-action . src/main.ts .env
-     ```
-
-   You can provide a `.env` file to the `local-action` CLI to set environment
-   variables used by the GitHub Actions Toolkit. For example, setting inputs and
-   event payload data used by your action. For more information, see the example
-   file, [`.env.example`](./.env.example), and the
-   [GitHub Actions Documentation](https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables).
-
-1. Commit your changes
-
-   ```bash
-   git add .
-   git commit -m "My first action is ready!"
-   ```
-
-1. Push them to your repository
-
-   ```bash
-   git push -u origin releases/v1
-   ```
-
-1. Create a pull request and get feedback on your action
-1. Merge the pull request into the `main` branch
-
-Your action is now published! :rocket:
-
-For information about versioning your action, see
-[Versioning](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md)
-in the GitHub Actions toolkit.
-
-## Validate the Action
-
-You can now validate the action by referencing it in a workflow file. For
-example, [`ci.yml`](./.github/workflows/ci.yml) demonstrates how to reference an
-action in the same repository.
-
-```yaml
-steps:
-  - name: Checkout
-    id: checkout
-    uses: actions/checkout@v4
-
-  - name: Test Local Action
-    id: test-action
-    uses: ./
-    with:
-      milliseconds: 1000
-
-  - name: Print Output
-    id: output
-    run: echo "${{ steps.test-action.outputs.time }}"
+```bash
+npm install syslog-client-ts
 ```
-
-For example workflow runs, check out the
-[Actions tab](https://github.com/actions/typescript-action/actions)! :rocket:
 
 ## Usage
 
-After testing, you can create version tag(s) that developers can use to
-reference different stable versions of your action. For more information, see
-[Versioning](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md)
-in the GitHub Actions toolkit.
+### Importing the Module
 
-To include the action in a workflow in another repository, you can use the
-`uses` syntax with the `@` symbol to reference a specific branch, tag, or commit
-hash.
-
-```yaml
-steps:
-  - name: Checkout
-    id: checkout
-    uses: actions/checkout@v4
-
-  - name: Test Local Action
-    id: test-action
-    uses: actions/typescript-action@v1 # Commit with the `v1` tag
-    with:
-      milliseconds: 1000
-
-  - name: Print Output
-    id: output
-    run: echo "${{ steps.test-action.outputs.time }}"
+```typescript
+import {
+  Facility,
+  Identity,
+  Severity,
+  SyslogClient,
+  TCPOptions,
+} from 'syslog-client';
 ```
 
-## Publishing a New Release
+### Creating an Identity
 
-This project includes a helper script, [`script/release`](./script/release)
-designed to streamline the process of tagging and pushing new releases for
-GitHub Actions.
+Define an `Identity` object with your desired settings:
 
-GitHub Actions allows users to select a specific version of the action to use,
-based on release tags. This script simplifies this process by performing the
-following steps:
+```typescript
+const identity: Identity = {
+  facility: Facility.LOCAL0,
+  severity: Severity.INFORMATIONAL,
+  appName: 'SpiderVerse',
+  syslogHostname: 'spiderverse.dev',
+  // pid is optional and defaults to process.pid
+};
+```
 
-1. **Retrieving the latest release tag:** The script starts by fetching the most
-   recent SemVer release tag of the current branch, by looking at the local data
-   available in your repository.
-1. **Prompting for a new release tag:** The user is then prompted to enter a new
-   release tag. To assist with this, the script displays the tag retrieved in
-   the previous step, and validates the format of the inputted tag (vX.X.X). The
-   user is also reminded to update the version field in package.json.
-1. **Tagging the new release:** The script then tags a new release and syncs the
-   separate major tag (e.g. v1, v2) with the new release tag (e.g. v1.0.0,
-   v2.1.2). When the user is creating a new major release, the script
-   auto-detects this and creates a `releases/v#` branch for the previous major
-   version.
-1. **Pushing changes to remote:** Finally, the script pushes the necessary
-   commits, tags and branches to the remote repository. From here, you will need
-   to create a new release in GitHub so users can easily reference the new tags
-   in their workflows.
+### Instantiating the Client
+
+Create a new `SyslogClient` instance:
+
+```typescript
+const client = new SyslogClient({
+  hostname: 'syslog-server.example.com',
+  port: 514,
+  transport: 'tcp', // or udp
+  identity: identity,
+  {
+    timeout: 5000,
+    reconnect: true,
+    reconnectInterval: 2000,
+  },
+);
+```
+
+### Connecting to the Syslog Server
+
+Connect to the server using the `connect` method:
+
+```typescript
+client
+  .connect()
+  .then(() => {
+    console.log('Connected to syslog server');
+  })
+  .catch(err => {
+    console.error('Connection error:', err);
+  });
+```
+
+### Sending a Log Message
+
+Use the `log` method to send messages:
+
+```typescript
+client
+  .log('This is a test message')
+  .then(() => {
+    console.log('Message sent successfully');
+  })
+  .catch(err => {
+    console.error('Error sending message:', err);
+  });
+```
+
+### Handling Events
+
+Listen to events emitted by the client:
+
+```typescript
+client.on('connect', () => {
+  console.log('Client connected');
+});
+
+client.on('disconnect', () => {
+  console.log('Client disconnected');
+});
+
+client.on('error', err => {
+  console.error('An error occurred:', err);
+});
+```
+
+### Disconnecting
+
+When done, disconnect the client:
+
+```typescript
+client.disconnect();
+```
+
+## API Reference
+
+### SyslogClient Class
+
+#### Constructor
+
+```typescript
+new SyslogClient({
+  options: SyslogClientOptions,
+  defaultIdentity: IIdentity,
+  options?: ITCPOptions,
+});
+```
+
+- `hostname`: Syslog server hostname or IP address.
+- `port`: Port number of the syslog server.
+- `transport`: Transport protocol (`'tcp'` or `'udp'`).
+- `identity`: Identity object containing facility, severity, appName, etc.
+- `options`: Optional TCP options (only applicable for TCP transport).
+
+#### Methods
+
+- `connect(): Promise<void>`: Connects to the syslog server.
+- `log(message: string, options?: LogOptions): Promise<void>`: Sends a log
+  message.
+- `disconnect(): void`: Disconnects from the syslog server.
+
+#### Events
+
+- `connect`: Emitted upon successful connection.
+- `disconnect`: Emitted when the connection is closed.
+- `error`: Emitted when an error occurs.
+
+### Interfaces
+
+#### Identity
+
+```typescript
+interface IIdentity {
+  facility: FacilityType;
+  severity: SeverityType;
+  appName: string;
+  syslogHostname: string;
+  pid?: number;
+}
+```
+
+#### TCP Options
+
+```typescript
+interface ITCPOptions {
+  timeout?: number; // Socket timeout in milliseconds
+  reconnect?: boolean; // Enable automatic reconnection
+  reconnectInterval?: number; // Interval between reconnection attempts in milliseconds
+}
+```
+
+### Enums
+
+#### Facility
+
+```typescript
+enum Facility {
+  KERNEL = 0,
+  USER = 1,
+  MAIL = 2,
+  SYSTEM = 3,
+  DAEMON = 3,
+  AUTH = 4,
+  SYSLOG = 5,
+  LPR = 6,
+  NEWS = 7,
+  UUCP = 8,
+  CRON = 9,
+  AUTHPRIV = 10,
+  FTP = 11,
+  AUDIT = 13,
+  ALERT = 14,
+  LOCAL0 = 16,
+  LOCAL1 = 17,
+  LOCAL2 = 18,
+  LOCAL3 = 19,
+  LOCAL4 = 20,
+  LOCAL5 = 21,
+  LOCAL6 = 22,
+  LOCAL7 = 23,
+}
+```
+
+#### Severity
+
+```typescript
+enum Severity {
+  EMERGENCY = 0,
+  ALERT = 1,
+  CRITICAL = 2,
+  ERROR = 3,
+  WARNING = 4,
+  NOTICE = 5,
+  INFORMATIONAL = 6,
+  DEBUG = 7,
+}
+```
+
+## Examples
+
+### Sending a Simple Message
+
+```typescript
+await client.log('System started successfully');
+```
+
+### Overriding Facility and Severity
+
+```typescript
+await client.log('Disk space low', {
+  facility: Facility.SYSTEM,
+  severity: Severity.WARNING,
+});
+```
+
+### Using a Custom Identity
+
+```typescript
+const customIdentity: Identity = {
+  facility: Facility.LOCAL1,
+  severity: Severity.ERROR,
+  appName: 'CustomApp',
+  syslogHostname: 'custom-host',
+  pid: 12345,
+};
+
+await client.log('Custom error message', customIdentity);
+```
+
+### Handling Reconnection
+
+Enable automatic reconnection for TCP transport:
+
+```typescript
+const client = new SyslogClient({
+  hostname: 'syslog-server.example.com',
+  port: 514,
+  transport: 'tcp',
+  identity: identity,
+  {
+    reconnect: true,
+    reconnectInterval: 5000,
+  },
+);
+```
+
+## Error Handling
+
+Listen for errors to handle exceptions:
+
+```typescript
+client.on('error', err => {
+  console.error('Error:', err.message);
+});
+```
+
+## Best Practices
+
+- **TCP vs UDP**: Use TCP for reliable delivery, UDP for lower overhead.
+- **Event Listeners**: Listen to `error` events to catch and handle exceptions.
+- **Resource Management**: Call `disconnect()` when the client is no longer
+  needed.
+
+## Development
+
+### Building the Project
+
+Compile the TypeScript code using:
+
+```bash
+yarn build
+```
+
+### Running Tests
+
+```bash
+yarn test
+```
+
+## Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature/your-feature`).
+3. Commit your changes (`git commit -am 'Add your feature'`).
+4. Push to the branch (`git push origin feature/your-feature`).
+5. Open a pull request.
+
+## License
+
+This project is licensed under the MIT License.
+
+## Acknowledgments
+
+- Inspired by the need for a flexible syslog client in Node.js applications.
+- Follows the RFC 5424 standard for syslog message formatting.
+
+## Contact
+
+For questions or support, please open an issue on the GitHub repository.

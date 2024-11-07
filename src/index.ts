@@ -1,7 +1,15 @@
-/**
- * The entrypoint for the action.
- */
-import { run } from './main'
+import { SyslogClient } from './client.js';
+import { Facility, FacilityType } from './facility.js';
+import { Severity, SeverityType } from './severity.js';
+import { IIdentity } from './identity.js';
+import { ITCPOptions } from './tcp.js';
+import { ISyslogClientOptions } from './clientOptions.js';
 
-// eslint-disable-next-line @typescript-eslint/no-floating-promises
-run()
+// Export classes
+export { SyslogClient, Facility, Severity };
+
+// Export interfaces
+export { ISyslogClientOptions, IIdentity, ITCPOptions };
+
+// Export types
+export { FacilityType, SeverityType };

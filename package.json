@@ -3,7 +3,6 @@
   "description": "Modern typescript implementation of Syslog Client",
   "version": "0.2.1",
   "author": "Yoshi Jäger (github@jaeger.berlin)",
-  "private": true,
   "homepage": "https://github.com/SmartArray/syslog-client-ts",
   "repository": {
     "type": "git",
@@ -34,7 +33,7 @@
     "format:write": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint . -c ./.github/linters/.eslintrc.yml",
-    "local-action": "local-action . src/main.ts .env",
+    "local-action": "local-action . src/index.ts .env",
     "build": "tsc",
     "test": "jest --config jest.unit.config.js",
     "all": "yarn format:write && yarn lint && yarn test && yarn coverage",

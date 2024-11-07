@@ -73,7 +73,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@github/local-action": "^2.1.3",
+    "@github/local-action": "^2.2.0",
     "@jest/globals": "^29.7.0",
     "@types/debug": "^4.1.12",
     "@types/jest": "^29.5.14",

@@ -14,14 +14,9 @@ module.exports = {
     '^.+.tsx?$': ['ts-jest', {}],
   },
 
-  moduleFileExtensions: [
-    'js',
-    'json',
-    'node',
-    'ts',
-  ],
+  moduleFileExtensions: ['js', 'json', 'node', 'ts'],
 
   moduleNameMapper: {
     '^(\\.\\.?/.*)\\.js$': '$1',
-  }  
+  },
 };

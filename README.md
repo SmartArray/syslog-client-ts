@@ -32,7 +32,7 @@ import {
   Identity,
   Severity,
   SyslogClient,
-  TCPOptions
+  TCPOptions,
 } from 'syslog-client';
 ```
 
@@ -45,7 +45,7 @@ const identity: Identity = {
   facility: Facility.LOCAL0,
   severity: Severity.INFORMATIONAL,
   appName: 'SpiderVerse',
-  syslogHostname: 'spiderverse.dev'
+  syslogHostname: 'spiderverse.dev',
   // pid is optional and defaults to process.pid
 };
 ```
@@ -209,7 +209,7 @@ enum Facility {
   LOCAL4 = 20,
   LOCAL5 = 21,
   LOCAL6 = 22,
-  LOCAL7 = 23
+  LOCAL7 = 23,
 }
 ```
 
@@ -224,7 +224,7 @@ enum Severity {
   WARNING = 4,
   NOTICE = 5,
   INFORMATIONAL = 6,
-  DEBUG = 7
+  DEBUG = 7,
 }
 ```
 
@@ -241,7 +241,7 @@ await client.log('System started successfully');
 ```typescript
 await client.log('Disk space low', {
   facility: Facility.SYSTEM,
-  severity: Severity.WARNING
+  severity: Severity.WARNING,
 });
 ```
 
@@ -253,7 +253,7 @@ const customIdentity: Identity = {
   severity: Severity.ERROR,
   appName: 'CustomApp',
   syslogHostname: 'custom-host',
-  pid: 12345
+  pid: 12345,
 };
 
 await client.log('Custom error message', customIdentity);

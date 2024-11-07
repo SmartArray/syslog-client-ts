@@ -1,7 +1,7 @@
 {
   "name": "syslog-client-ts",
   "description": "Modern typescript implementation of Syslog Client",
-  "version": "0.2.1-rc3",
+  "version": "0.2.1-rc4",
   "author": "Yoshi Jäger (github@jaeger.berlin)",
   "homepage": "https://github.com/SmartArray/syslog-client-ts",
   "repository": {
@@ -26,11 +26,11 @@
   },
   "files": [
     "./dist"
-  ],  
+  ],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "engines": {
-    "node": ">=20"
+    "node": ">=18"
   },
   "scripts": {
     "ci-test": "jest",

@@ -13,7 +13,7 @@ export const DEFAULT_SYSLOG_TRANSPORT = 'tcp';
 export const DEFAULT_SYSLOG_CLIENT_OPTIONS = (): ISyslogClientOptions => ({
   hostname: '127.0.0.1',
   port: DEFAULT_SYSLOG_PORT,
-  transport: DEFAULT_SYSLOG_TRANSPORT
+  transport: DEFAULT_SYSLOG_TRANSPORT,
 });
 
 export const DEFAULT_IDENTITY = (): IIdentity => ({
@@ -21,11 +21,11 @@ export const DEFAULT_IDENTITY = (): IIdentity => ({
   severity: Severity.INFORMATIONAL,
   appName: process.title,
   syslogHostname: os.hostname(),
-  pid: process.pid
+  pid: process.pid,
 });
 
 export const DEFAULT_TCP_OPTIONS = (): ITCPOptions => ({
   timeout: 5000,
   reconnect: false,
-  reconnectInterval: 3000
+  reconnectInterval: 3000,
 });

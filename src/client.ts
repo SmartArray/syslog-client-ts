@@ -2,9 +2,6 @@ import net from 'node:net';
 import dgram from 'node:dgram';
 import { EventEmitter } from 'node:events';
 
-import { FacilityType } from './facility.js';
-import { SeverityType } from './severity.js';
-
 import { ISyslogClientOptions } from './clientOptions.js';
 import { IIdentity } from './identity.js';
 import { ITCPOptions } from './tcp.js';
@@ -14,7 +11,7 @@ import {
   DEFAULT_SYSLOG_TRANSPORT,
   DEFAULT_SYSLOG_CLIENT_OPTIONS,
   DEFAULT_IDENTITY,
-  DEFAULT_TCP_OPTIONS
+  DEFAULT_TCP_OPTIONS,
 } from './defaults.js';
 
 export class SyslogClient extends EventEmitter {
@@ -29,7 +26,7 @@ export class SyslogClient extends EventEmitter {
   constructor(
     options: ISyslogClientOptions,
     defaultIdentity?: IIdentity,
-    tcpOptions?: ITCPOptions
+    tcpOptions?: ITCPOptions,
   ) {
     super();
 
@@ -136,13 +133,8 @@ export class SyslogClient extends EventEmitter {
   ): string {
     const computedIdentity = Object.assign({}, this.identity, overrideIdentity);
 
-    const {
-      facility,
-      severity,
-      appName,
-      syslogHostname,
-      pid,
-    } = computedIdentity;
+    const { facility, severity, appName, syslogHostname, pid } =
+      computedIdentity;
 
     const pri = facility * 8 + severity;
     const timestamp = new Date().toISOString();
@@ -193,7 +185,7 @@ export class SyslogClient extends EventEmitter {
             } else {
               resolve();
             }
-          }
+          },
         );
       });
     }

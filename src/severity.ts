@@ -9,7 +9,7 @@ export const Severity = {
   WARNING: 4,
   NOTICE: 5,
   INFORMATIONAL: 6,
-  DEBUG: 7
+  DEBUG: 7,
 } as const;
 
 export type SeverityType = (typeof Severity)[keyof typeof Severity];

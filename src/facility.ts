@@ -24,7 +24,7 @@ export const Facility = {
   LOCAL4: 20,
   LOCAL5: 21,
   LOCAL6: 22,
-  LOCAL7: 23
+  LOCAL7: 23,
 } as const;
 
 export type FacilityType = (typeof Facility)[keyof typeof Facility];

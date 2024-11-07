@@ -25,8 +25,8 @@ export class SyslogClient extends EventEmitter {
 
   constructor(
     options: ISyslogClientOptions,
-    defaultIdentity?: IIdentity,
-    tcpOptions?: ITCPOptions,
+    defaultIdentity: Partial<IIdentity> = {},
+    tcpOptions: Partial<ITCPOptions> = {},
   ) {
     super();
 
